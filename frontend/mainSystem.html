@@ -1,0 +1,1192 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Ticketsystem – Übersicht</title>
+<style>
+body {
+	background-color: #f4f6f8;
+	font-family: "Segoe UI", sans-serif;
+	margin: 0;
+	padding: 2rem;
+	color: #333;
+}
+
+h1, h2 {
+	text-align: center;
+	margin-bottom: 1rem;
+}
+
+#ticketListe {
+	list-style: none;
+	padding: 0;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+#ticketListe li {
+	background-color: #ffffff;
+	padding: 1.5rem;
+	margin-bottom: 1.5rem;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease;
+}
+
+#ticketListe li:hover {
+	transform: scale(1.01);
+}
+/*
+    .ticket-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+*/
+.ticket-header .notiz {
+	color: #555;
+	font-weight: bold;
+	text-align: right;
+}
+
+.ticket-notiz {
+	float: right;
+	background-color: #e3f2fd;
+	padding: 0.4rem 0.8rem;
+	border-radius: 6px;
+	font-weight: bold;
+	color: #1565c0;
+	margin-left: 1rem;
+	margin-bottom: 0.5rem;
+	max-width: 50%;
+	text-align: right;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;
+}
+
+/* 👇 Das steht ganz oben oder außerhalb anderer Blöcke */
+body {
+	overflow: visible !important;
+}
+
+/* 👇 Das ist dein bestehender Style für das Formular */
+/*form#ticketForm, form#kundeForm, form#kundeBearbeitenForm, form#mitarbeiterAnlegenForm {
+	background-color: #ffffff;
+	padding: 1.5rem;
+	margin: 2rem auto;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	max-width: 800px;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	overflow: visible !important;
+	position: relative;
+	z-index: 10;
+}*/
+form#ticketForm label {
+	font-weight: bold;
+}
+
+form#ticketForm input, form#ticketForm select {
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+form#ticketForm select {
+	margin-bottom: 1.5rem;
+	appearance: none;
+	background-color: #fff;
+	background-image:
+		url("data:image/svg+xml,%3Csvg viewBox='0 0 4 5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 0L0 2h4L2 0z' fill='%23333'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 0.75rem center;
+	background-size: 0.65rem auto;
+}
+
+form#ticketForm button {
+	padding: 0.7rem;
+	background-color: #1976d2;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+form#ticketForm button:hover {
+	background-color: #145a9e;
+}
+
+#ticketErgebnis {
+	text-align: center;
+	margin-top: 1rem;
+	font-weight: bold;
+	color: green;
+}
+/* 🔵 Styling nur für das Bearbeiten-Modal */
+#editModal .modal-content {
+	background-color: #f0f8ff; /* hellblau */
+	box-shadow: 0 0 20px rgba(33, 150, 243, 0.3); /* blauer Glow */
+}
+
+button.delete-btn {
+	padding: 0.5rem 1rem;
+	background-color: #1976d2;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	font-weight: bold;
+	cursor: pointer;
+	margin-top: 0.5rem;
+	transition: background-color 0.3s ease;
+}
+
+.close-btn {
+	float: right;
+	font-size: 24px;
+	cursor: pointer;
+}
+
+button.delete-btn:hover {
+	background-color: #145a9e;
+}
+
+/* 🌟 Gemeinsames Styling für alle fünf Buttons */
+.toggle-btn {
+	width: 180px; /* Breite der Buttons reduziert (schmaler) */
+	padding: 0.6rem 1rem; /* Innenabstand oben/unten & rechts/links */
+	background-color: #1976d2; /* Blaue Hintergrundfarbe */
+	color: white; /* Weißer Text */
+	font-weight: bold; /* Fettschrift */
+	border: none; /* Kein Rahmen */
+	border-radius: 6px; /* Abgerundete Ecken */
+	cursor: pointer; /* Zeiger-Cursor beim Überfahren */
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Leichter Schatteneffekt */
+	transition: background-color 0.2s ease;
+	/* Sanfte Farbübergänge beim Hover */
+	display: flex; /* Flexbox für Icon + Text */
+	align-items: center; /* Icon + Text vertikal zentrieren */
+	gap: 0.5rem; /* Abstand zwischen Icon und Text */
+}
+
+/* 🟦 Hover-Effekt: Button wird dunkler beim Darüberfahren */
+.toggle-btn:hover {
+	background-color: #145a9e;
+}
+
+/* 🎫 Position des "Ticket erstellen"-Buttons oben links */
+.btn-ticket {
+	position: fixed; /* Bleibt immer sichtbar beim Scrollen */
+	top: 1rem; /* Abstand vom oberen Rand */
+	left: 1rem; /* Abstand vom linken Rand */
+}
+
+/* 🧾 Position des "Kunde anlegen"-Buttons darunter */
+.btn-kunde {
+	position: fixed;
+	top: 4.5rem; /* weiter unten als der erste Button */
+	left: 1rem;
+}
+
+/* 🛠️ Position des "Kunde bearbeiten"-Buttons noch weiter unten */
+.btn-bearbeiten {
+	position: fixed;
+	top: 8rem; /* wieder etwas weiter unten */
+	left: 1rem;
+}
+/* Mitarbeiter anlegen Button Position*/
+.btn-mitarbeiter {
+	position: fixed;
+	top: 11.5rem;
+	left: 1rem
+}
+/* StatusFilter aktivieren Button Position*/
+.btn-StatusFilter {
+	position: fixed;
+	top: 15rem;
+	left: 1rem
+}
+
+/* ❌ Schließen-Button */
+.close-btn {
+	color: #888;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.close-btn:hover {
+	color: #000;
+}
+
+/* ✨ Modal Basis */
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 99;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 🎨 Modal Inhalt */
+.modal-content {
+	background-color: #fefefe;
+	margin: 5% auto;
+	padding: 2rem;
+	border-radius: 12px;
+	box-shadow: 0 0 20px rgba(0, 123, 255, 0.25);
+	width: 90%;
+	max-width: 500px;
+	font-family: "Segoe UI", sans-serif;
+}
+
+/* ✏️ Input-Felder */
+.modal-content input[type="text"], .modal-content input[type="password"],
+	.modal-content input[type="email"] {
+	width: 100%;
+	padding: 0.6rem;
+	margin: 0.5rem 0 1rem 0;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 1rem;
+}
+
+/* 💾 Speichern-Button */
+.modal-content button {
+	background-color: #007bff;
+	border: none;
+	color: white;
+	padding: 0.6rem 1.2rem;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: bold;
+	transition: background-color 0.2s ease;
+}
+
+
+
+.modal-content button:hover {
+	background-color: #0056b3;
+}
+
+.modal-checkbox {
+align-items: center;
+display: flex;
+margin-bottom:10px;
+
+}
+
+.ticket-status {
+	display: inline-block;
+	padding: 0.2rem 0.6rem;
+	border-radius: 6px;
+	font-size: 0.9rem;
+	font-weight: bold;
+	color: white;
+	margin-top: 0.5rem;
+}
+
+.ticket-status.offen {
+	background-color: #4caf50;
+}
+
+.ticket-status.archiviert {
+	background-color: #9e9e9e;
+}
+
+#kundeForm {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+}
+
+.form-actions {
+	margin-top: 1rem;
+	display: flex;
+	justify-content: flex-start;
+}
+
+#kundeForm input {
+	padding: 0.6rem;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 1rem;
+}
+
+#kundeForm button {
+	background-color: #007bff;
+	border: none;
+	color: white;
+	padding: 0.6rem 1.2rem;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: bold;
+	transition: background-color 0.2s ease;
+}
+
+#kundeForm button:hover {
+	background-color: #0056b3;
+}
+
+.ticket-status {
+	display: inline-block;
+	padding: 0.4rem 0.8rem;
+	border-radius: 6px;
+	font-size: 0.9rem;
+	font-weight: bold;
+	color: white;
+	margin-top: 0.5rem;
+}
+
+.ticket-status.OFFEN {
+	background-color: #4caf50;
+}
+
+.ticket-status.PAUSIERT {
+	background-color: #ff9800;
+}
+
+.ticket-status.INBEARBEITUNG {
+	background-color: #2196f3;
+}
+
+.ticket-status.ABGESCHLOSSEN {
+	background-color: #388e3c;
+}
+
+.ticket-status.ARCHIVIERT {
+	background-color: #9e9e9e;
+}
+
+.error {
+	text-align: center;
+	color: red;
+	font-weight: bold;
+	margin-top: 2rem;
+}
+
+strong {
+	color: #1976d2;
+}
+</style>
+</head>
+<body>
+
+	<div>
+		<button id="toggleFormBtn" class="toggle-btn btn-ticket">🎫
+			Ticket erstellen</button>
+
+		<button id="toggleKundeBtn" class="toggle-btn btn-kunde">🧾
+			Kunde anlegen</button>
+
+		<button id="toggleKundenBearbeitenBtn"
+			class="toggle-btn btn-bearbeiten">🛠️ Kunde bearbeiten</button>
+
+		<button id="toggleMitarbeiterBtn" class="toggle-btn btn-mitarbeiter">👤Mitarbeiter
+			anlegen</button>
+
+		<button id="toggleStatusFilterBtn" class="toggle-btn btn-StatusFilter">🗂️Status
+			Filter</button>
+	</div>
+
+
+
+	<h1>Willkommen im Ticketsystem</h1>
+	<h2>Ticketliste</h2>
+	<ul id="ticketListe"></ul>
+
+	<!-- MODAL FÜR TICKET FORM -->
+	<div id="ticketModal" class="modal" style="display: none;">
+		<div class="modal-content">
+			<span class="close-btn" id="closeModal">&times;</span>
+			<h2>Neues Ticket erstellen</h2>
+
+			<form id="ticketForm">
+				<label for="beschreibung">Beschreibung:</label> <input type="text"
+					id="beschreibung" required> <label for="notiz">Notiz:</label>
+				<input type="text" id="notiz"> <label for="kundeId">Kunde:</label>
+				<select id="kundeId" required></select>
+
+				<button type="submit">Ticket absenden</button>
+			</form>
+
+			<div id="ticketErgebnis"></div>
+		</div>
+	</div>
+
+
+
+	<!-- MODAL FÜR KUNDEN ANLEGEN -->
+	<div id="kundeModal" class="modal" style="display: none;">
+		<div class="modal-content">
+			<span class="close-btn" id="closeKundeModal">&times;</span>
+			<h2>🧾 Kunde anlegen</h2>
+
+			<form id="kundeForm">
+				<div class="form-group">
+					<label for="vorname">Vorname:</label> <input type="text"
+						id="vorname" required>
+				</div>
+
+				<div class="form-group">
+					<label for="nachname">Nachname:</label> <input type="text"
+						id="nachname" required>
+				</div>
+
+				<div class="form-group">
+					<label for="firmenname">Firmenname:</label> <input type="text"
+						id="firmenname" required>
+				</div>
+
+				<div class="form-group">
+					<label for="telefon">Telefonnummer:</label> <input type="text"
+						id="telefon">
+				</div>
+
+				<div class="form-group">
+					<label for="email">E-Mail-Adresse:</label> <input type="email"
+						id="email">
+				</div>
+
+				<div class="form-actions">
+					<button type="submit">✅ Speichern</button>
+				</div>
+			</form>
+
+
+			<div id="kundeResultat"></div>
+		</div>
+	</div>
+
+
+
+	<!-- MODAL FÜR KUNDE BEARBEITEN -->
+	<div id="kundeBearbeitenModal" class="modal" style="display: none;">
+		<div class="modal-content">
+			<span class="close-btn" id="closeKundeBearbeitenModal">&times;</span>
+			<h2>🛠️ Kunde bearbeiten</h2>
+
+			<form id="kundeBearbeitenForm">
+				<!-- Dropdown zur Auswahl des Kunden -->
+
+				<label for="bearbeitenKundeSelect">Kunde auswählen:</label> <select
+					id="bearbeitenKundeSelect" required></select>
+
+				<!-- Eingabefelder -->
+				<div class="form-group">
+					<label for="bearbeitenVorname">Vorname:</label> <input type="text"
+						id="bearbeitenVorname" required>
+
+				</div>
+
+				<div class="form-group">
+					<label for="bearbeitenNachname">Nachname:</label> <input
+						type="text" id="bearbeitenNachname" required>
+				</div>
+
+				<div class="form-group">
+					<label for="bearbeitenFirmenname">Firmenname:</label> <input
+						type="text" id="bearbeitenFirmenname" required>
+				</div>
+
+				<div class="form-group">
+					<label for="bearbeitenEmail">E-Mail:</label> <input type="email"
+						id="bearbeitenEmail">
+				</div>
+
+				<div class="form-group">
+					<label for="bearbeitenTelefon">Telefonnummer:</label> <input
+						type="text" id="bearbeitenTelefon">
+				</div>
+				<!-- Buttons -->
+				<div style="display: flex; gap: 1rem; margin-top: 1rem;">
+					<button type="submit">💾 Speichern</button>
+					<button type="button" id="deleteKundeBtn"
+						style="background-color: red;">🗑️ Löschen</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+
+
+	<!-- MODAL FÜR TICKET BEARBEITEN -->
+	<div id="editModal" class="modal">
+		<div class="modal-content">
+			<span class="close-btn" id="closeEditModal">&times;</span>
+			<h2>
+				<span style="margin-right: 0.5rem;">🛠️</span>Ticket bearbeiten
+			</h2>
+
+
+			<form id="editTicketForm">
+				<input type="hidden" id="editTicketId"> <label
+					for="editBeschreibung">Beschreibung:</label> <input type="text"
+					id="editBeschreibung" required> <label for="editNotiz">Notiz:</label>
+
+				<input type="text" id="editNotiz"> <label for="editStatus">Status:</label>
+				<select id="editStatus" required>
+					<option value="OFFEN">OFFEN</option>
+					<option value="PAUSIERT">PAUSIERT</option>
+					<option value="INBEARBEITUNG">IN BEARBEITUNG</option>
+					<option value="ABGESCHLOSSEN">ABGESCHLOSSEN</option>
+					<option value="ARCHIVIERT">ARCHIVIERT</option>
+				</select> <label for="editBearbeiter">Bearbeiter:</label> <select
+					id="editBearbeiter">
+
+				</select>
+
+
+				<button type="submit">💾 Speichern</button>
+			</form>
+
+			<div id="editTicketResult"></div>
+		</div>
+	</div>
+
+
+	<!-- MODAL FÜR MITARBEITER ANLEGEN -->
+	<div id="mitarbeiterAnlegenModal" class="modal" style="display: none;">
+		<div class="modal-content">
+			<span class="close-btn" id="closeMitarbeiterAnlegen">&times;</span>
+			<h2>👤 Ein neuer Mitarbeiter wird angelegt</h2>
+
+			<form id="mitarbeiterAnlegenForm">
+				<div class="form-group">
+					<label for="vorname">Vorname:</label> <input type="text"
+						id="mvorname" required>
+				</div>
+				<div class="form-group">
+					<label for="nachname">Nachname</label><input type="text"
+						id="mnachname" required>
+				</div>
+				<div class="form-group">
+					<label for="email">E-Mail</label><input type="text" id="memail"
+						required>
+				</div>
+				<div class="form-group">
+					<label for="telefonnummer">Telefonnummer</label><input type="text"
+						id="mtelefonnummer" required>
+				</div>
+				<div class="form-group">
+					<label for="loginname">Loginname</label> <input type="text"
+						id="mloginname" required>
+				</div>
+
+				<div class="form-group">
+					<label for="password">Passwort</label> <input type="password"
+						id="mpassword" required>
+				</div>
+
+				<div class="form-group">
+					<button type="submit">💾 Speichern</button>
+				</div>
+			</form>
+
+
+		</div>
+
+	</div>
+	<!-- MODAL FÜR Status Filter -->
+	<div id="statusAktivierenModal" class="modal" style="display: none;">
+		<div class="modal-content">
+			<span class="close-btn" id="closeStatusAktivierenModal">&times;</span>
+			<h2>Filter Aussuchen</h2>
+
+			<form id="ticketForm">
+				<label for="kundeId">Status Arten</label> 
+				
+				<input type="checkbox" name="status" class="modal-checkbox" value="OFFEN" id="check1">
+				<label for "check1>OFFEN</label><br>
+				<input type="checkbox" name="status" class="modal-checkbox" value="PAUSIERT" id="check2">
+				<label for "check2>PAUSIERT</label>
+				<input type="checkbox" name="status" class="modal-checkbox" value="IN BEARBEITUNG" id="check3">
+				<lable for check3>IN BEARBEITUNG</lable>
+				<input type="checkbox" name="status" class="modal-checkbox" value="ABGESCHLOSSEN" id="check4">
+				<lable for check4>ABGESCHLOSSEN</lable>	
+				<input type="checkbox" name="status" class="modal-checkbox" value="ARCHIVIERT" id="check5">
+				<lable for check5>ARICHIVIERT</lable>
+				<button type="submit">Filter Übernehmen</button>
+			</form>
+
+			<div id="ticketErgebnis"></div>
+		</div>
+	</div>
+
+
+
+
+	<script>
+	let alleBearbeiter = [];
+    async function fetchTickets() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Nicht eingeloggt!");
+        window.location.href = "index.html";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:9090/api/tickets", {
+          method: "GET",
+          headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (response.ok) {
+          const tickets = await response.json();
+          const liste = document.getElementById("ticketListe");
+          liste.innerHTML = "";
+
+          tickets.forEach(ticket => {
+            const li = document.createElement("li");
+
+            let datumText = "unbekannt";
+            if (ticket.erstelldatum) {
+              const datum = new Date(ticket.erstelldatum);
+              datumText = datum.toLocaleString("de-DE", {
+                day: "2-digit", month: "2-digit", year: "numeric",
+                hour: "2-digit", minute: "2-digit"
+              });
+            }
+
+            const bearbeiter = alleBearbeiter.find(b => b.id === ticket.bearbeiterId);
+            const bearbeiterName = bearbeiter ? `${bearbeiter.vorname} ${bearbeiter.nachname}` : "-";
+
+            const unsichererInhalt = `
+              <div class="ticket-notiz">📝 ${ticket.notiz || "-"}</div>
+              <strong>Beschreibung:</strong> ${ticket.beschreibung || "Keine Beschreibung"}<br>
+              <strong>Erstellt am:</strong> ${datumText}<br>
+              <strong>Kunde:</strong> ${ticket.kundeName}<br>
+              <strong>Erstellt von:</strong> ${ticket.erstellerName}<br>
+              <strong>Bearbeiter:</strong> ${bearbeiterName}<br>
+
+              <span class="ticket-status ${ticket.status}">
+                ${ticket.status}
+              </span><br>
+
+              <button type="button" class="delete-btn" data-id="${ticket.id}">🗑️ Löschen</button>
+            `;
+
+
+            	li.innerHTML = DOMPurify.sanitize(unsichererInhalt, {
+            		ADD_ATTR: ['id', 'data-id','class'],
+            		ALLOWED_TAGS: [ 'div', 'span', 'button', 'strong', 'br']
+            	});
+            	console.log("🧪 li HTML:", li.innerHTML);
+
+
+
+            	
+            	li.addEventListener("click", async (event) => {
+            		  if (event.target.tagName.toLowerCase() === "button") return;
+
+            		  console.log("🟢 Ticket wurde angeklickt:", ticket.id);
+    			document.getElementById("editTicketId").value = ticket.id;
+    			document.getElementById("editBeschreibung").value = ticket.beschreibung || "";
+    			document.getElementById("editNotiz").value = ticket.notiz || "";
+    			document.getElementById("editStatus").value = ticket.status || "OFFEN";
+
+    		    try {
+    		        loadBearbeiterDropdown();  
+    		    } catch (error) {
+    		        console.error("❌ Fehler beim Laden der Bearbeiter:", error);
+    		    }
+    			document.getElementById("editBearbeiter").value = ticket.bearbeiterId || "";
+
+    			document.getElementById("editModal").style.display = "block";
+
+  				});
+            	
+
+
+            liste.appendChild(li);
+          const ticket_delete_btn =  li.querySelector(".delete-btn");
+          if (ticket_delete_btn) {ticket_delete_btn.addEventListener("click", (e) => {
+        	  e.stopPropagation(); // verhindert, dass Click weitergeleitet wird
+        	  deleteTicket(ticket.id);
+        	});}
+
+
+          });
+        } else {
+          document.body.innerHTML += "<p class='error'>Zugriff verweigert! (Token evtl. ungültig)</p>";
+        }
+      } catch (error) {
+        console.error("Fehler beim Laden:", error);
+        document.body.innerHTML += "<p class='error'>Fehler beim Laden der Daten!</p>";
+      }
+    }
+
+    async function fetchKunden() {
+    	  console.log("🟡 fetchKunden() wird aufgerufen...");
+
+    	  try {
+    		  const response = await fetch("http://localhost:9090/api/kunden", {
+    			  headers: {
+    			    "Authorization": "Bearer " + localStorage.getItem("token")
+    			  }
+    			});
+
+    	    console.log("Antwort erhalten:", response);
+
+    	    if (response.ok) {
+    	      const kunden = await response.json();
+    	      await fetchBearbeiter();
+
+    	      const select = document.getElementById("kundeId");
+    	      select.innerHTML = ""; 
+    	      kunden.forEach(kunde => {
+    	        const option = document.createElement("option");
+    	        option.value = kunde.id;
+    	        option.textContent = kunde.firmenname;
+    	        select.appendChild(option);
+    	      });
+
+    	    } else {
+    	      console.error("❌ Kunden konnten nicht geladen werden:", response.status);
+    	    }
+
+    	  } catch (err) {
+    	    console.error("❌ Fehler beim Laden der Kunden:", err);
+    	  }
+    	}
+
+    
+    document.getElementById("mitarbeiterAnlegenForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+
+        const vorname = document.getElementById("mvorname").value.trim();
+        const nachname = document.getElementById("mnachname").value.trim();
+        const email = document.getElementById("memail").value.trim();
+        const telefonnummer = document.getElementById("mtelefonnummer").value.trim();
+        const loginname = document.getElementById("mloginname").value.trim();
+        const passwort = document.getElementById("mpassword").value.trim();
+
+        console.log("📦 Eingaben:", { vorname, nachname, email, telefonnummer, loginname, passwort });
+
+
+        if (!passwort || passwort.length < 8 || !loginname) {
+            alert("Das Passwort und der Loginname dürfen nicht leer sein und müssen mindestens 8 Zeichen lang sein.");
+            return;
+        }
+
+        const confirmed = confirm("Möchtest du den Mitarbeiter wirklich speichern?");
+        if (!confirmed) {
+            return;
+        }
+
+
+        const payload = {
+            vorname: vorname,
+            nachname: nachname,
+            email: email,
+            telefonnummer: telefonnummer,
+            loginname: loginname,
+            passwort: passwort
+        };
+
+        try {
+            console.log("🚀 Schicke Request an /api/mitarbeiter...");
+            console.log("🔑 Token:", localStorage.getItem("token"));
+            console.log("📦 Payload:", payload);
+
+            const response = await fetch("http://localhost:9090/api/mitarbeiter", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                alert("✅ Mitarbeiter erfolgreich gespeichert!");
+                mitarbeiterAnlegenModal.style.display = "none";
+                mitarbeiterAnlegenForm.reset();
+                fetchKunden();
+            } else {
+                const errorText = await response.text();
+                console.error("❌ Fehler vom Server:", errorText);
+                alert("❌ Fehler beim Speichern. Details siehe Konsole.");
+            }
+        } catch (err) {
+            console.error("⚠️ Fehler beim Anlegen:", err);
+            alert("⚠️ Technischer Fehler beim Speichern.");
+        }
+    });
+
+    
+    
+    
+    
+    
+    document.getElementById("ticketForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const beschreibung = document.getElementById("beschreibung").value;
+      const notiz = document.getElementById("notiz").value;
+      const kundeId = document.getElementById("kundeId").value;
+
+      const payload = {
+        beschreibung,
+        notiz,
+        kunde: { id: parseInt(kundeId) }
+      };
+
+      try {
+        const response = await fetch("http://localhost:9090/api/tickets", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+          },
+          body: JSON.stringify(payload)
+          
+        });
+
+        if (response.ok) {
+          document.getElementById("ticketModal").style.display = "none";
+          document.getElementById("ticketErgebnis").innerText = "✅ Ticket erfolgreich erstellt!";
+          document.getElementById("ticketForm").reset();
+          fetchTickets();
+  
+        } else {
+          document.getElementById("ticketErgebnis").innerText = "❌ Fehler beim Erstellen.";
+        }
+      } catch (err) {
+        console.error("Fehler beim Senden:", err);
+        document.getElementById("ticketErgebnis").innerText = "⚠️ Technischer Fehler.";
+      }
+    });
+
+    async function deleteTicket(ticketId) {
+      const token = localStorage.getItem("token");
+      if (!confirm("Willst du dieses Ticket wirklich löschen?")) return;
+
+      try {
+        const response = await fetch(`http://localhost:9090/api/tickets/${ticketId}`, {
+          method: "DELETE",
+          headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (response.ok) {
+          alert("✅ Ticket gelöscht");
+          fetchTickets(); 
+        } else {
+          alert("❌ Fehler beim Löschen");
+        }
+      } catch (err) {
+        console.error("Fehler beim Löschen:", err);
+        alert("⚠️ Technischer Fehler");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    	  fetchTickets();
+    	  fetchKunden();
+    	  
+
+    	  const ticketModal = document.getElementById("ticketModal");
+    	  const kundeModal = document.getElementById("kundeModal");
+    	  const kundeBearbeitenModal = document.getElementById("kundeBearbeitenModal");
+    	  const editModal = document.getElementById("editModal");
+    	  const mitarbeiterAnlegenModal = document.getElementById("mitarbeiterAnlegenModal");
+
+		  
+    	  document.getElementById("toggleFormBtn").addEventListener("click", () => { ticketModal.style.display = "block"});
+    	  document.getElementById("closeModal").addEventListener("click", () => ticketModal.style.display = "none");
+
+    	   	  
+    	  document.getElementById("toggleKundeBtn").addEventListener("click", () => kundeModal.style.display = "block");
+    	  document.getElementById("closeKundeModal").addEventListener("click", () => kundeModal.style.display = "none");
+    	  
+    	  
+    	  document.getElementById("toggleMitarbeiterBtn").addEventListener("click", () => mitarbeiterAnlegenModal.style.display = "block");
+    	  document.getElementById("closeMitarbeiterAnlegen").addEventListener("click", () => mitarbeiterAnlegenModal.style.display ="none");
+    	    	  	
+
+    	  document.getElementById("toggleKundenBearbeitenBtn").addEventListener("click", () => {kundeBearbeitenModal.style.display = "block"; loadKundenInSelect()});
+ 	  	  document.getElementById("closeKundeBearbeitenModal").addEventListener("click", () => kundeBearbeitenModal.style.display = "none");
+ 	  	  
+    	  document.getElementById("toggleStatusFilterBtn").addEventListener("click", () => statusAktivierenModal.style.display = "block");
+ 	  	  document.getElementById("closeStatusAktivierenModal").addEventListener("click", () => statusAktivierenModal.style.display = "none");
+ 	  	
+ 	  	  
+ 	  	  
+ 	  	 
+ 	  	 
+ 	  	 
+    	  window.addEventListener("click", (event) => {
+    	    if (event.target === ticketModal) ticketModal.style.display = "none";
+    	    if (event.target === kundeModal) kundeModal.style.display = "none";
+    	    if (event.target === kundeBearbeitenModal) kundeBearbeitenModal.style.display = "none"; 
+    	    if (event.target === mitarbeiterAnlegenModal) mitarbeiterAnlegenModal.style.display = "none";
+    	    if (event.target === editModal) editModal.style.display ="none"; 
+    	    if (event.target === statusAktivierenModal) statusAktivierenModal.style.display = "none";
+    	    
+    	  });
+
+    	  document.getElementById("kundeForm").addEventListener("submit", async (event) => {
+    	    event.preventDefault();
+    	    const payload = {
+    	      vorname: vorname.value,
+    	      nachname: nachname.value,
+    	      firmenname: firmenname.value,
+    	      telefonnummer: telefon.value,
+    	      email: email.value
+    	    };
+
+    	    try {
+    	      const res = await fetch("http://localhost:9090/api/kunden", {
+    	        method: "POST",
+    	        headers: {
+    	          "Content-Type": "application/json",
+    	          "Authorization": "Bearer " + localStorage.getItem("token")
+    	        },
+    	        body: JSON.stringify(payload)
+    	      });
+
+    	      if (res.ok) {
+    	        kundeModal.style.display = "none";
+    	        kundeForm.reset();
+    	        fetchKunden();
+    	        alert("✅ Kunde erfolgreich gespeichert!");
+    	      } else {
+    	        alert("❌ Fehler beim Speichern.");
+    	      }
+    	    } catch (err) {
+    	      console.error("Fehler beim Kunden-Speichern:", err);
+    	      alert("⚠️ Technischer Fehler");
+    	    }
+    	  });
+
+    	  document.getElementById("editTicketForm").addEventListener("submit", async function (e) {
+    	    e.preventDefault();
+    	    const id = document.getElementById("editTicketId").value;
+    	    const beschreibung = document.getElementById("editBeschreibung").value;
+    	    const notiz = document.getElementById("editNotiz").value;
+    	    const status = document.getElementById("editStatus").value;
+    	    const bearbeiterId = document.getElementById("editBearbeiter").value;
+    	    
+    	    const token = localStorage.getItem("token");
+
+    	    const payload = {
+    	      id: parseInt(id),
+    	      beschreibung,
+    	      notiz,
+    	      status,
+    	      bearbeiterId: bearbeiterId ? parseInt(bearbeiterId) : null
+    	    };
+
+    	    try {
+    	      const response = await fetch(`http://localhost:9090/api/tickets/${id}`, {
+    	        method: "PUT",
+    	        headers: {
+    	          "Content-Type": "application/json",
+    	          "Authorization": "Bearer " + token
+    	        },
+    	        body: JSON.stringify(payload)
+    	      });
+
+    	      if (response.ok) {
+    	        document.getElementById("editModal").style.display = "none";
+    	        fetchTickets();
+    	      } else {
+    	        document.getElementById("editTicketResult").innerText = "❌ Fehler beim Aktualisieren.";
+    	      }
+    	    } catch (err) {
+    	      console.error("Fehler beim Aktualisieren:", err);
+    	      document.getElementById("editTicketResult").innerText = "⚠️ Technischer Fehler.";
+    	    }
+    	  });
+
+    	  document.getElementById("closeEditModal").addEventListener("click", () => {
+    	    document.getElementById("editModal").style.display = "none";
+    	    document.getElementById("editModal").classList.remove("open");
+    	  });
+
+    	  async function loadKundenInSelect() {
+    		  const select = document.getElementById("bearbeitenKundeSelect");
+    		  select.innerHTML = "";
+
+    		  try {
+    		    const res = await fetch("http://localhost:9090/api/kunden", {
+    		      headers: {
+    		        "Authorization": "Bearer " + localStorage.getItem("token")
+    		      }
+    		    });
+
+    		    if (res.ok) {
+    		      const kunden = await res.json();
+    		      kunden.forEach(kunde => {
+    		        const option = document.createElement("option");
+    		        option.value = kunde.id;
+    		        option.textContent = kunde.firmenname;
+    		        select.appendChild(option);
+    		      });
+    		    } else {
+    		      console.error("❌ Fehler beim Laden der Kunden:", res.status);
+    		    }
+
+    		  } catch (e) {
+    		    console.error("❌ Technischer Fehler beim Kunden-Select-Laden:", e);
+    		  }
+    		}
+    	  
+    	  
+    	  document.getElementById("bearbeitenKundeSelect").addEventListener("change", async function () {
+    		  const id = this.value;
+    		  if (!id) return;
+
+    		  try {
+    		    const res = await fetch(`http://localhost:9090/api/kunden/${id}`, {
+    		      headers: {
+    		        "Authorization": "Bearer " + localStorage.getItem("token")
+    		      }
+    		    });
+
+    		    if (res.ok) {
+    		      const kunde = await res.json();
+    		      document.getElementById("bearbeitenVorname").value = kunde.vorname || "";
+    		      document.getElementById("bearbeitenNachname").value = kunde.nachname || "";
+    		      document.getElementById("bearbeitenFirmenname").value = kunde.firmenname || "";
+    		      document.getElementById("bearbeitenEmail").value = kunde.email || "";
+    		      document.getElementById("bearbeitenTelefon").value = kunde.telefonnummer || "";
+    		    } else {
+    		      console.error("❌ Fehler beim Laden eines bestimmten Kunden:", res.status);
+    		    }
+
+    		  } catch (err) {
+    		    console.error("❌ Fehler beim Abrufen des Kundendatensatzes:", err);
+    		  }
+    		});
+    	  document.getElementById("kundeBearbeitenForm").addEventListener("submit", async function (e) {
+    		  e.preventDefault();
+    		  console.log("📤 Kunde speichern wurde ausgelöst");
+
+    		  const id = document.getElementById("bearbeitenKundeSelect").value;
+    		  console.log("📤 Speichern für Kunde:", id);
+    		  const payload = {
+    		    id: parseInt(id),
+    		    vorname: document.getElementById("bearbeitenVorname").value,
+    		    nachname: document.getElementById("bearbeitenNachname").value,
+    		    firmenname: document.getElementById("bearbeitenFirmenname").value,
+    		    email: document.getElementById("bearbeitenEmail").value,
+    		    telefonnummer: document.getElementById("bearbeitenTelefon").value
+    		  };
+					
+    		  console.log("📦 Payload:", payload);
+    		  
+    		  try {
+    		    const response = await fetch(`http://localhost:9090/api/kunden/${id}`, {
+    		      method: "PUT",
+    		      headers: {
+    		        "Content-Type": "application/json",
+    		        "Authorization": "Bearer " + localStorage.getItem("token")
+    		      },
+    		      body: JSON.stringify(payload)
+    		    });
+
+    		    if (response.ok) {
+    		      alert("✅ Kunde wurde erfolgreich aktualisiert.");
+    		      document.getElementById("kundeBearbeitenModal").style.display = "none";
+    		      fetchKunden(); // aktualisiert Dropdowns
+    		    } else {
+    		      alert("❌ Fehler beim Aktualisieren des Kunden.");
+    		    }
+    		  } catch (err) {
+    		    console.error("⚠️ Fehler beim PUT-Request:", err);
+    		    alert("⚠️ Technischer Fehler beim Aktualisieren.");
+    		  }
+    		});
+    	  
+    	 
+    	  document.getElementById("deleteKundeBtn").addEventListener("click", async function () {
+    		  const id = document.getElementById("bearbeitenKundeSelect").value;
+    		  if (!id) return;
+
+    		  if (!confirm("Willst du diesen Kunden wirklich löschen?")) return;
+
+    		  try {
+    		    const response = await fetch(`http://localhost:9090/api/kunden/${id}`, {
+    		      method: "DELETE",
+    		      headers: {
+    		        "Authorization": "Bearer " + localStorage.getItem("token")
+    		      }
+    		    });
+
+    		    if (response.ok) {
+    		      alert("🗑️ Kunde wurde erfolgreich gelöscht.");
+    		      document.getElementById("kundeBearbeitenModal").style.display = "none";
+    		      fetchKunden(); // aktualisiert Dropdown
+    		    } else {
+    		      alert("❌ Fehler beim Löschen des Kunden.");
+    		    }
+    		  } catch (err) {
+    		    console.error("Fehler beim Löschen des Kunden:", err);
+    		    alert("⚠️ Technischer Fehler beim Löschen.");
+    		  }
+    		});
+
+    	}); 
+    async function fetchBearbeiter() {
+    	  const token = localStorage.getItem("token");
+    	  try {
+    	    const response = await fetch("http://localhost:9090/api/mitarbeiter", {
+    	      headers: { "Authorization": "Bearer " + token }
+    	    });
+    	    if (response.ok) {
+    	      alleBearbeiter = await response.json();
+    	      console.log("👥 Alle Bearbeiter geladen:", alleBearbeiter);
+    	    } else {
+    	      console.error("❌ Fehler beim Laden der Bearbeiter:", response.status);
+    	    }
+    	  } catch (err) {
+    	    console.error("❌ Technischer Fehler beim Laden der Bearbeiter:", err);
+    	  }
+    	}
+
+    async function loadBearbeiterDropdown() {
+    	  const select = document.getElementById("editBearbeiter");
+    	  select.innerHTML = ""; // Dropdown leeren
+    	  
+    	  alleBearbeiter.forEach(bearbeiter => {
+    	    const option = document.createElement("option");
+    	    option.value = bearbeiter.id;
+    	    option.textContent = `${bearbeiter.vorname} ${bearbeiter.nachname}`;
+    	    select.appendChild(option);
+    	  });
+
+    }
+
+
+  </script>
+	<script src="mainSystem.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/dompurify@3.0.2/dist/purify.min.js"></script>
+
+</body>
+</html>
+

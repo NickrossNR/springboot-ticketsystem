@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de" id="ticketsystem-login">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Ticketsystem</title>
+  <style>
+    body {
+      background-color: #f2f4f8;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-box {
+      background-color: #ffffff;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+      color: #444;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      border: none;
+      background-color: #1976d2;
+      color: white;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #125aa5;
+    }
+    .logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.logo-container img {
+  max-width: 250px;
+  height: auto;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.3));
+}
+    
+
+    #erfolgreiche_Anmeldung {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+  
+    <div class="logo-container">
+    <img src="Firmenlogo.png" >
+  </div>
+    <h1>Ticketsystem</h1>
+    <h2>Benutzeranmeldung</h2>
+
+    <form id="LoginForm">
+      <label for="username">Login Name</label>
+      <input type="text" id="username" name="username" placeholder="Gib deinen Namen ein" required />
+
+      <label for="password">Passwort</label>
+      <input type="password" id="password" name="password" placeholder="Passwort" required />
+
+      <button type="submit">Anmelden</button>
+    </form>
+
+    <div id="erfolgreiche_Anmeldung"></div>
+  </div>
+
+  <script>
+    async function sendData(event) {
+      event.preventDefault();
+
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+      
+
+      try {
+        const response = await fetch("http://localhost:9090/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            loginName: username,
+            loginPasswort: password
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("token", data.token);
+          document.getElementById("erfolgreiche_Anmeldung").innerText = "Login erfolgreich!";
+          window.location.href = "mainSystem.html";
+        } else {
+          document.getElementById("erfolgreiche_Anmeldung").innerText = "Login fehlgeschlagen!";
+        }
+      } catch (error) {
+        console.error("Login-Fehler:", error);
+        document.getElementById("erfolgreiche_Anmeldung").innerText = "Technischer Fehler beim Login!";
+      }
+    }
+
+    document.getElementById("LoginForm").addEventListener("submit", sendData);
+  </script>
+</body>
+</html>
+
+
