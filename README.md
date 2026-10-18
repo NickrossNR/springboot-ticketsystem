@@ -191,3 +191,9 @@ NickrossNR
 ## Status
 
 Projektstatus: Entwicklungs-/Demo-Projekt mit funktionaler Backend- und Frontend-Struktur.
+
+## Ausschnitte
+<img width="1906" height="912" alt="Unbenannt" src="https://github.com/user-attachments/assets/f6a147a6-4d5d-410a-af9e-a3942be00e6f" />
+
+<img width="1906" height="912" alt="image" src="https://github.com/user-attachments/assets/359dd43c-55c3-4334-90a1-007878338a2d" />
+
