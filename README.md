@@ -196,4 +196,12 @@ Projektstatus: Entwicklungs-/Demo-Projekt mit funktionaler Backend- und Frontend
 <img width="1906" height="912" alt="Unbenannt" src="https://github.com/user-attachments/assets/f6a147a6-4d5d-410a-af9e-a3942be00e6f" />
 
 
+<img width="1917" height="934" alt="image" src="https://github.com/user-attachments/assets/dce96ed7-9229-4009-94a2-b112c4bdf30d" />
+
+<img width="1911" height="927" alt="image" src="https://github.com/user-attachments/assets/a3e60551-9532-4d7e-bb0f-686abaf396cb" />
+<img width="1913" height="926" alt="image" src="https://github.com/user-attachments/assets/46debb85-395d-4022-bd2f-94e3f7826981" />
+<img width="1911" height="924" alt="image" src="https://github.com/user-attachments/assets/650dfdb8-3421-4861-ac28-01169e58f94b" />
+
+<img width="1909" height="928" alt="image" src="https://github.com/user-attachments/assets/a6682e63-c4a7-4c9a-814d-ba3c594b5dc0" />
+<img width="1917" height="926" alt="image" src="https://github.com/user-attachments/assets/4c71bc41-6df2-4e7d-9e7e-c7ee0512cceb" />
 
