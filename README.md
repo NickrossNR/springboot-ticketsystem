@@ -214,5 +214,6 @@ Projektstatus: Entwicklungs-/Demo-Projekt mit funktionaler Backend- und Frontend
 <img width="1909" height="928" alt="image" src="https://github.com/user-attachments/assets/a6682e63-c4a7-4c9a-814d-ba3c594b5dc0" />
 
 ### Screenshot: Ticket bearbeiten Funktion
+(Um ein Ticket zu bearbeiten, wird ein Klick auf das Ticket benötigt.)
 <img width="1917" height="926" alt="image" src="https://github.com/user-attachments/assets/4c71bc41-6df2-4e7d-9e7e-c7ee0512cceb" />
 
